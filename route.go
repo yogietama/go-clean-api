@@ -2,43 +2,37 @@ package main
 
 import (
 	"encoding/json"
+	"math/rand"
 	"net/http"
-)
 
-type Post struct {
-	Id    int    `json:"id"`
-	Title string `json:"title"`
-	Text  string `json:"text"`
-}
+	"./entity_db"
+
+	"./repository_proj"
+)
 
 var (
-	posts   []Post // as our database store
-	counter int    = 2
+	repo    repository_proj.PostRepository = repository_proj.NewPostRepository() //as our database store
+	counter int                            = 2
 )
-
-func init() {
-	posts = []Post{{Id: 1, Title: "Title 1", Text: "Text 1"}}
-}
 
 func getPosts(rw http.ResponseWriter, r *http.Request) {
 	rw.Header().Set("Content-type", "aplication/json")
 
-	result, err := json.Marshal(posts)
-
+	posts, err := repo.FindAll()
 	if err != nil {
 		rw.WriteHeader(http.StatusInternalServerError)
-		rw.Write([]byte(`{"error" : "error marshaling the posts array"}`))
+		rw.Write([]byte(`{"error" : "error getting the posts"}`))
 		return
 	}
 
 	rw.WriteHeader(http.StatusOK)
-	rw.Write(result)
+	json.NewEncoder(rw).Encode(posts)
 }
 
 func addPosts(rw http.ResponseWriter, r *http.Request) {
 	rw.Header().Set("Content-type", "aplication/json")
 
-	var post Post
+	var post entity_db.Post
 
 	err := json.NewDecoder(r.Body).Decode(&post)
 
@@ -48,19 +42,9 @@ func addPosts(rw http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	post.Id = counter
-	counter++
+	post.ID = int64(rand.Int())
 
-	posts = append(posts, post)
-
-	result, err := json.Marshal(post)
-
-	if err != nil {
-		rw.WriteHeader(http.StatusInternalServerError)
-		rw.Write([]byte(`{"error" : "error marshaling the posts array"}`))
-		return
-	}
-
+	repo.Save(&post)
 	rw.WriteHeader(http.StatusOK)
-	rw.Write(result)
+	json.NewEncoder(rw).Encode(post)
 }
