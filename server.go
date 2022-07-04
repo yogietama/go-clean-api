@@ -5,23 +5,31 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/gorilla/mux"
+	"./controller"
+	"./repository"
+	"./router"
+	"./service"
+)
+
+var (
+	postRepository repository.PostRepository = repository.NewFirestoreRepository() // Change YOUR DB Stack here
+	postService    service.PostService       = service.NewPostService(postRepository)
+	postController controller.PostController = controller.NewPostController(postService)
+	httpRouter     router.Router             = router.NewChiRouter() // Change Your Routing Framework Here
 )
 
 func main() {
-	var router = mux.NewRouter()
 	const port string = ":8000"
 
-	router.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+	httpRouter.GET("/", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintln(w, "welcome to golang")
 	})
 
-	router.HandleFunc("/posts", getPosts).Methods("GET")
-	router.HandleFunc("/posts", addPosts).Methods("POST")
+	httpRouter.GET("/posts", postController.GetPosts)
+	httpRouter.POST("/posts", postController.AddPosts)
 
 	log.Println("Server listening on port", port)
 
-	err := http.ListenAndServe(port, router)
-	log.Fatalln(err)
+	httpRouter.SERVE(port)
 
 }

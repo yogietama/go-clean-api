@@ -1,18 +1,13 @@
-package repository_proj
+package repository
 
 import (
 	"context"
 	"log"
 
-	"../entity_db"
+	"../entity"
 
 	"cloud.google.com/go/firestore"
 )
-
-type PostRepository interface {
-	Save(post *entity_db.Post) (*entity_db.Post, error)
-	FindAll() ([]entity_db.Post, error)
-}
 
 type repo struct{}
 
@@ -21,11 +16,11 @@ const (
 	collectionName = "posts"
 )
 
-func NewPostRepository() PostRepository {
+func NewFirestoreRepository() PostRepository {
 	return &repo{}
 }
 
-func (*repo) Save(post *entity_db.Post) (*entity_db.Post, error) {
+func (*repo) Save(post *entity.Post) (*entity.Post, error) {
 	ctx := context.Background()
 	client, err := firestore.NewClient(ctx, projectId)
 
@@ -51,7 +46,7 @@ func (*repo) Save(post *entity_db.Post) (*entity_db.Post, error) {
 
 }
 
-func (*repo) FindAll() ([]entity_db.Post, error) {
+func (*repo) FindAll() ([]entity.Post, error) {
 	ctx := context.Background()
 	client, err := firestore.NewClient(ctx, projectId)
 
@@ -62,7 +57,7 @@ func (*repo) FindAll() ([]entity_db.Post, error) {
 
 	defer client.Close()
 
-	var posts []entity_db.Post
+	var posts []entity.Post
 
 	iterator := client.Collection(collectionName).Documents(ctx)
 
@@ -74,7 +69,7 @@ func (*repo) FindAll() ([]entity_db.Post, error) {
 			break
 		}
 
-		post := entity_db.Post{
+		post := entity.Post{
 			ID:    doc.Data()["ID"].(int64),
 			Title: doc.Data()["Title"].(string),
 			Text:  doc.Data()["Text"].(string),
