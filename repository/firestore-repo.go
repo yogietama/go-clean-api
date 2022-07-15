@@ -1,5 +1,10 @@
 package repository
 
+/*
+
+export GOOGLE_APPLICATION_CREDENTIALS="/Documents/Yogie/Tutorial/Creds/firebase-creds.json"
+*/
+
 import (
 	"context"
 	"log"

@@ -12,6 +12,10 @@ import (
 )
 
 var (
+	carDetailsService    service.CarDetailsService       = service.NewCarDetailsService()
+	carDetailsController controller.CarDetailsController = controller.NewCarDetailsController(carDetailsService)
+	// carDetailsController controller.CarDetailsController = controller.NewCarDetailsController(carDetailsService)
+
 	postRepository repository.PostRepository = repository.NewFirestoreRepository() // Change YOUR DB Stack here
 	postService    service.PostService       = service.NewPostService(postRepository)
 	postController controller.PostController = controller.NewPostController(postService)
@@ -27,6 +31,7 @@ func main() {
 
 	httpRouter.GET("/posts", postController.GetPosts)
 	httpRouter.POST("/posts", postController.AddPosts)
+	httpRouter.GET("/carDetails", carDetailsController.GetCarDetails)
 
 	log.Println("Server listening on port", port)
 
