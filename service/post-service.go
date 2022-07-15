@@ -4,8 +4,8 @@ import (
 	"errors"
 	"math/rand"
 
-	"../entity"
-	"../repository"
+	"github.com/yogie/go-clean-api/entity"
+	"github.com/yogie/go-clean-api/repository"
 )
 
 type PostService interface {

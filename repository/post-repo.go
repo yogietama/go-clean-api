@@ -1,7 +1,7 @@
 package repository
 
 import (
-	"../entity"
+	"github.com/yogie/go-clean-api/entity"
 )
 
 type PostRepository interface {

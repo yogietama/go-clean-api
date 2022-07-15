@@ -4,7 +4,7 @@ import (
 	"context"
 	"log"
 
-	"../entity"
+	"github.com/yogie/go-clean-api/entity"
 
 	"cloud.google.com/go/firestore"
 )

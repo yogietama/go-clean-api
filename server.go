@@ -5,10 +5,10 @@ import (
 	"log"
 	"net/http"
 
-	"./controller"
-	"./repository"
-	"./router"
-	"./service"
+	"github.com/yogie/go-clean-api/controller"
+	"github.com/yogie/go-clean-api/repository"
+	"github.com/yogie/go-clean-api/router"
+	"github.com/yogie/go-clean-api/service"
 )
 
 var (

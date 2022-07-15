@@ -5,9 +5,9 @@ import (
 	"math/rand"
 	"net/http"
 
-	"../entity"
-	"../errors"
-	"../service"
+	"github.com/yogie/go-clean-api/entity"
+	"github.com/yogie/go-clean-api/errors"
+	"github.com/yogie/go-clean-api/service"
 )
 
 var (
