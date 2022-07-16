@@ -16,7 +16,7 @@ var (
 	carDetailsController controller.CarDetailsController = controller.NewCarDetailsController(carDetailsService)
 	// carDetailsController controller.CarDetailsController = controller.NewCarDetailsController(carDetailsService)
 
-	postRepository repository.PostRepository = repository.NewFirestoreRepository() // Change YOUR DB Stack here
+	postRepository repository.PostRepository = repository.NewPostgreRepository() // Change YOUR DB Stack here
 	postService    service.PostService       = service.NewPostService(postRepository)
 	postController controller.PostController = controller.NewPostController(postService)
 	httpRouter     router.Router             = router.NewChiRouter() // Change Your Routing Framework Here

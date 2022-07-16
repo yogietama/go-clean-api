@@ -6,6 +6,7 @@ require (
 	cloud.google.com/go/firestore v1.6.1
 	github.com/go-chi/chi v1.5.4
 	github.com/gorilla/mux v1.8.0
+	github.com/lib/pq v1.10.6
 	github.com/stretchr/testify v1.8.0
 )
 

@@ -2,7 +2,6 @@ package service
 
 import (
 	"errors"
-	"math/rand"
 
 	"github.com/yogie/go-clean-api/entity"
 	"github.com/yogie/go-clean-api/repository"
@@ -40,7 +39,6 @@ func (*service) Validate(post *entity.Post) error {
 
 }
 func (*service) Create(post *entity.Post) (*entity.Post, error) {
-	post.ID = rand.Int63()
 	return repo.Save(post)
 }
 func (*service) FindAll() ([]entity.Post, error) {

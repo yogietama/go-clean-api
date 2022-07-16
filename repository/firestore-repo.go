@@ -2,7 +2,8 @@ package repository
 
 /*
 
-export GOOGLE_APPLICATION_CREDENTIALS="/Documents/Yogie/Tutorial/Creds/firebase-creds.json"
+export GOOGLE_APPLICATION_CREDENTIALS="/Users/yogie.tama/Documents/Yogie/Tutorial/Creds/firebase-creds.json"
+
 */
 
 import (
