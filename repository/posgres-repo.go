@@ -37,7 +37,7 @@ func (*postgreRepo) Save(post *entity.Post) (*entity.Post, error) {
 	idString := strconv.Itoa(int(post.ID))
 
 	querySaveData := "INSERT INTO posts VALUES (" + idString + ", '" + post.Title + "', '" + post.Text + "');"
-	fmt.Println(querySaveData)
+	// fmt.Println(querySaveData)
 	_, err := db.Exec(querySaveData)
 	if err != nil {
 		log.Fatalf("Failed to add a new post : %v", err)
@@ -78,6 +78,20 @@ func (*postgreRepo) FindAll() ([]entity.Post, error) {
 
 	return posts, nil
 
+}
+
+func (*postgreRepo) Delete(post *entity.Post) error {
+	db := connectDB()
+	defer db.Close()
+
+	query := "DELETE FROM posts WHERE title='" + post.Title + "';"
+	_, err := db.Exec(query)
+	if err != nil {
+		log.Fatalf("Failed to delete %v", post.Title)
+		return err
+	}
+
+	return nil
 }
 
 func connectDB() *sql.DB {

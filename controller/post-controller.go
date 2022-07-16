@@ -55,7 +55,7 @@ func (*postControllerStruct) AddPosts(rw http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	post.ID = int64(rand.Intn(100000))
+	post.ID = rand.Int63()
 
 	isNotValid := postService.Validate(&post)
 	if isNotValid != nil {
