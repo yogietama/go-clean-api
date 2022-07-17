@@ -6,9 +6,11 @@ import (
 	"io"
 	"net/http"
 	"net/http/httptest"
+	"strconv"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/yogie/go-clean-api/cache"
 	"github.com/yogie/go-clean-api/entity"
 	"github.com/yogie/go-clean-api/repository"
 	"github.com/yogie/go-clean-api/service"
@@ -17,7 +19,8 @@ import (
 var (
 	postRepoTest       repository.PostRepository = repository.NewPostgreRepository()
 	postServiceTest    service.PostService       = service.NewPostService(postRepoTest)
-	postControllerTest PostController            = NewPostController(postServiceTest)
+	postCacheTest      cache.PostCache           = cache.NewRedisCache("localhost:6379", 0, 10)
+	postControllerTest PostController            = NewPostController(postServiceTest, postCacheTest)
 )
 
 const (
@@ -59,6 +62,38 @@ func TestAddPosts(t *testing.T) {
 	// cleanUp testing data in database
 	postRepoTest.Delete(&post)
 
+}
+
+func TestGetPostById(t *testing.T) {
+	setup()
+	req, _ := http.NewRequest("GET", "/posts/"+strconv.FormatInt(ID, 10), nil)
+
+	// assign HTTP handler function (Get post function)
+	handler := http.HandlerFunc(postControllerTest.GetPostByID)
+
+	// record HTTP response (httptest)
+	response := httptest.NewRecorder()
+
+	// Dispatch the HTTP request
+	handler.ServeHTTP(response, req)
+
+	// add assertion on http status code and the response
+	status := response.Code
+
+	if status != http.StatusOK {
+		t.Errorf("Handler returned a wrong status code: gor %v want %v", status, http.StatusOK)
+	}
+
+	var post entity.Post
+	json.NewDecoder(io.Reader(response.Body)).Decode(&post)
+
+	// assertionn HTTP response
+	assert.NotNil(t, post.ID)
+	assert.Equal(t, TITLE, post.Title)
+	assert.Equal(t, TEXT, post.Text)
+
+	// cleanUp testing data in database
+	postRepoTest.Delete(&post)
 }
 
 func TestGetPosts(t *testing.T) {

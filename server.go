@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/yogie/go-clean-api/cache"
 	"github.com/yogie/go-clean-api/controller"
 	"github.com/yogie/go-clean-api/repository"
 	"github.com/yogie/go-clean-api/router"
@@ -14,11 +15,11 @@ import (
 var (
 	carDetailsService    service.CarDetailsService       = service.NewCarDetailsService()
 	carDetailsController controller.CarDetailsController = controller.NewCarDetailsController(carDetailsService)
-	// carDetailsController controller.CarDetailsController = controller.NewCarDetailsController(carDetailsService)
 
 	postRepository repository.PostRepository = repository.NewPostgreRepository() // Change YOUR DB Stack here
 	postService    service.PostService       = service.NewPostService(postRepository)
-	postController controller.PostController = controller.NewPostController(postService)
+	postChache     cache.PostCache           = cache.NewRedisCache("localhost:6379", 1, 10)
+	postController controller.PostController = controller.NewPostController(postService, postChache)
 	httpRouter     router.Router             = router.NewChiRouter() // Change Your Routing Framework Here
 )
 
@@ -30,6 +31,7 @@ func main() {
 	})
 
 	httpRouter.GET("/posts", postController.GetPosts)
+	httpRouter.GET("/posts/{id}", postController.GetPostByID)
 	httpRouter.POST("/posts", postController.AddPosts)
 	httpRouter.GET("/carDetails", carDetailsController.GetCarDetails)
 

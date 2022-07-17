@@ -31,6 +31,40 @@ func NewPostgreRepository() PostRepository {
 	return &postgreRepo{}
 }
 
+func (*postgreRepo) FindByID(postID string) (*entity.Post, error) {
+	db := connectDB()
+	defer db.Close()
+
+	querySelectById := "SELECT * FROM posts WHERE id=" + postID + ";"
+	rows, _ := db.Query(querySelectById)
+
+	var posts []entity.Post
+	for rows.Next() {
+		p := data{}
+
+		s := reflect.ValueOf(&p).Elem()
+		numCols := s.NumField()
+		columns := make([]interface{}, numCols)
+		for i := 0; i < numCols; i++ {
+			field := s.Field(i)
+			columns[i] = field.Addr().Interface()
+		}
+		err := rows.Scan(columns...)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		idInt, _ := strconv.Atoi(p.Id)
+		posts = append(posts, entity.Post{
+			ID:    int64(idInt),
+			Title: p.Title,
+			Text:  p.Text,
+		})
+	}
+
+	return &posts[0], nil
+}
+
 func (*postgreRepo) Save(post *entity.Post) (*entity.Post, error) {
 	db := connectDB()
 	defer db.Close()

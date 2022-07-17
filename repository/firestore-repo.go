@@ -26,6 +26,10 @@ func NewFirestoreRepository() PostRepository {
 	return &repo{}
 }
 
+func (*repo) FindByID(postID string) (*entity.Post, error) {
+	return nil, nil
+}
+
 func (*repo) Save(post *entity.Post) (*entity.Post, error) {
 	ctx := context.Background()
 	client, err := firestore.NewClient(ctx, projectId)

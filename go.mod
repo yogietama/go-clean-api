@@ -5,6 +5,7 @@ go 1.17
 require (
 	cloud.google.com/go/firestore v1.6.1
 	github.com/go-chi/chi v1.5.4
+	github.com/go-redis/redis v6.15.9+incompatible
 	github.com/gorilla/mux v1.8.0
 	github.com/lib/pq v1.10.6
 	github.com/stretchr/testify v1.8.0

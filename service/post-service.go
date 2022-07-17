@@ -11,6 +11,7 @@ type PostService interface {
 	Validate(post *entity.Post) error
 	Create(post *entity.Post) (*entity.Post, error)
 	FindAll() ([]entity.Post, error)
+	FindByID(postID string) (*entity.Post, error)
 }
 
 type service struct{}
@@ -22,6 +23,10 @@ var (
 func NewPostService(repoval repository.PostRepository) PostService {
 	repo = repoval
 	return &service{}
+}
+
+func (*service) FindByID(postID string) (*entity.Post, error) {
+	return repo.FindByID(postID)
 }
 
 func (*service) Validate(post *entity.Post) error {
